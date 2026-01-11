@@ -3,8 +3,16 @@ const result = document.getElementById("result");
 const scanBtn = document.getElementById("scanBtn");
 const startBtn = document.getElementById("startBtn");
 
-let model = null;
- // Placeholder for the model
+let model = null; // Placeholder for the model
+
+// ---- Scan order + class groups ----
+const OBJECT_CLASSES = ["waste", "recyclables", "compost", "nontrash"];
+const BIN_CLASSES = ["wastebins", "recyclebins", "compostbins"];
+
+let scanStage = "object"; // "object" → "bin"
+let scannedObject = null;
+let scannedBin = null;
+
 
 // Start the camera
 async function startCamera() {
@@ -67,7 +75,55 @@ async function scan() {
     }
   });
 
-  result.innerText = `${bestClass} (${Math.round(bestAvg * 100)}%)`;
+  // Confidence check
+if (bestAvg < 0.6) {
+  result.innerText = "Scan unclear. Please try again.";
+  return;
+}
+
+// =======================
+// OBJECT SCAN
+// =======================
+if (scanStage === "object") {
+  if (!OBJECT_CLASSES.includes(bestClass)) {
+    result.innerText = "Please scan a piece of trash first.";
+    return;
+  }
+
+  if (bestClass === "nontrash") {
+    result.innerText = "Trash not detected. Please try again.";
+    return;
+  }
+
+  scannedObject = bestClass;
+  scanStage = "bin";
+
+  result.innerText =
+    `Object detected: ${bestClass}. Now scan the bin.`;
+  return;
+}
+
+// =======================
+// BIN SCAN
+// =======================
+if (scanStage === "bin") {
+  if (!BIN_CLASSES.includes(bestClass)) {
+    result.innerText = "Bin not detected. Please scan a bin.";
+    return;
+  }
+
+  scannedBin = bestClass;
+
+  result.innerText =
+    `Bin detected: ${bestClass}. Ready to evaluate.`;
+
+  console.log("Object:", scannedObject);
+  console.log("Bin:", scannedBin);
+
+  // TEMP: reset for now
+  resetScanFlow("Scan complete. (Evaluation coming next)");
+}
+
 }
 
 
@@ -81,6 +137,12 @@ if (video && startBtn && scanBtn) {
   scanBtn.onclick = scan;
 }
 
+function resetScanFlow(message) {
+  scanStage = "object";
+  scannedObject = null;
+  scannedBin = null;
+  result.innerText = message;
+}
 
 
 // Highlight the current page in navbar
