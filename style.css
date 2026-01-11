@@ -1,0 +1,27 @@
+/* Base styles */
+body {
+    transition: background 1s ease-in-out;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100vh;
+}
+
+/* Level 1: Polluted Forest */
+.level-1 {
+    background-color: #4b5320; /* Dark olive/brownish */
+    /* background-image: url('polluted.jpg'); */
+}
+
+/* Level 2: Cleaning up */
+.level-2 {
+    background-color: #8fbc8f; /* Lighter green */
+}
+
+/* Level 3: Perfect Forest */
+.level-3 {
+    background-color: #2e8b57; /* Rich forest green */
+}
+
+#camera-frame {
+    background: #000;
+}
