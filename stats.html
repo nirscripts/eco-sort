@@ -8,11 +8,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-light">
-    <div class="container py-5">
-        <h1>Your Progress</h1>
-        <div class="card p-3 my-3">
-            <h3>Items Sorted: <span class="text-success">24</span></h3>
-            <p>You've saved 4kg of CO2 this month!</p>
+
+    <div class="container py-5 mb-5">
+        <h1 class="text-center fw-bold">Your Progress</h1>
+        
+        <div class="card shadow-sm p-3 my-4 mx-auto" style="max-width: 400px;">
+            <h5 class="text-center">Trash Composition</h5>
+            <canvas id="myChart"></canvas> 
+        </div>
+        <div class="card p-3 my-3 border-0 bg-success text-white text-center shadow">
+            <h3>Total Items: <span id="total-count">24</span></h3>
         </div>
     </div>
 
@@ -24,5 +29,21 @@
             <a href="about.html" class="nav-link text-white">About</a>
         </div>
     </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const ctx = document.getElementById('myChart');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Plastic', 'Paper', 'Landfill', 'Glass'],
+                datasets: [{
+                    data: [12, 5, 3, 4], 
+                    backgroundColor: ['#28a745', '#ffc107', '#dc3545', '#17a2b8']
+                }]
+            }
+        });
+    </script>
 </body>
 </html>

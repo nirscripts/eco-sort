@@ -25,3 +25,22 @@ btn.addEventListener('click', () => {
 });
 
 init();
+
+let trashCount = 0;
+
+function updateForest() {
+    const body = document.body;
+    if (trashCount >= 5 && trashCount < 10) {
+        body.className = 'level-2';
+        alert("Great job! The smog is clearing.");
+    } else if (trashCount >= 10) {
+        body.className = 'level-3';
+        alert("Incredible! The forest is thriving.");
+    }
+}
+
+// Update the click listener we made earlier
+btn.addEventListener('click', () => {
+    trashCount++; // Add to the score
+    updateForest(); // Check if the background should change
+});
