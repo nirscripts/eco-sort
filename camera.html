@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Trash Sort - Login</title>
+  <title>Trash Sort - Camera</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image"></script>
 </head>
 <body>
-
   <!-- Navbar -->
   <nav>
     <ul class="navbar">
@@ -18,19 +19,10 @@
     </ul>
   </nav>
 
-  <h1>Login / Register</h1>
-
-  <form id="loginForm">
-    <label for="email">Email:</label><br>
-    <input type="email" id="email" name="email" required><br><br>
-
-    <label for="password">Password:</label><br>
-    <input type="password" id="password" name="password" required><br><br>
-
-    <button type="submit">Login / Register</button>
-  </form>
-
-  <p>Note: Authentication is not active yet. This is a placeholder.</p>
+  <h1>Trash Camera</h1>
+  <video id="camera" autoplay playsinline></video>
+  <button id="scanBtn">Scan</button>
+  <p id="result">Waiting for scan...</p>
 
   <script src="script.js"></script>
 </body>
