@@ -6,20 +6,68 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Navbar -->
   <nav>
     <ul class="navbar">
       <li><a href="index.html" class="nav-link">Home</a></li>
       <li><a href="camera.html" class="nav-link">Trash Camera</a></li>
       <li><a href="stats.html" class="nav-link">My Stats</a></li>
       <li><a href="community.html" class="nav-link">Community</a></li>
-      <li><a href="login.html" class="nav-link">Login</a></li>
+      <li><a href="login.html" id="authLink" class="nav-link">Login</a></li>
     </ul>
   </nav>
 
-  <h1>Welcome to Trash Sort</h1>
+  <h1 id="welcomeHeader">Welcome to Trash Sort</h1>
   <p>Our mission: Keep the environment clean by helping users sort trash correctly.</p>
   <p>Click "Trash Camera" in the navbar to start scanning your trash!</p>
+
+  <button id="logoutBtn" style="display:none; margin-top: 20px;">Logout</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+    // 1. Same Config as before
+    const firebaseConfig = {
+      apiKey: "AIzaSyDGwR3VgjV1yHO3eEDkrfSINrJorOvh4nE",
+      authDomain: "ecosort-85cd5.firebaseapp.com",
+      projectId: "ecosort-85cd5",
+      storageBucket: "ecosort-85cd5.firebasestorage.app",
+      messagingSenderId: "532698568856",
+      appId: "1:532698568856:web:00fe22e2d54deb6ea618ed",
+      measurementId: "G-DWR81L0CVG"
+    };
+
+    // 2. Initialize
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // 3. Elements we want to change
+    const welcomeHeader = document.getElementById('welcomeHeader');
+    const authLink = document.getElementById('authLink');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // 4. THE AUTH GUARD: This runs every time the page loads
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // USER IS SIGNED IN
+        welcomeHeader.innerText = `Welcome back, ${user.email}!`;
+        authLink.style.display = "none"; // Hide "Login" link
+        logoutBtn.style.display = "block"; // Show "Logout" button
+      } else {
+        // USER IS SIGNED OUT
+        console.log("No user logged in.");
+        // Optional: window.location.href = "login.html"; // Uncomment this to force login
+      }
+    });
+
+    // 5. Logout Logic
+    logoutBtn.addEventListener('click', () => {
+      signOut(auth).then(() => {
+        alert("Logged out!");
+        window.location.reload(); // Refresh the page
+      });
+    });
+  </script>
 
   <script src="script.js"></script>
 </body>

@@ -7,7 +7,6 @@
 </head>
 <body>
 
-  <!-- Navbar -->
   <nav>
     <ul class="navbar">
       <li><a href="index.html" class="nav-link">Home</a></li>
@@ -27,10 +26,65 @@
     <label for="password">Password:</label><br>
     <input type="password" id="password" name="password" required><br><br>
 
-    <button type="submit">Login / Register</button>
+    <button type="button" id="loginBtn">Login</button>
+    <button type="button" id="signUpBtn">Sign Up (New Account)</button>
   </form>
 
-  <p>Note: Authentication is not active yet. This is a placeholder.</p>
+  <p id="statusLabel">Note: Authentication is active. Enter details to sign up or log in.</p>
+
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword 
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDGwR3VgjV1yHO3eEDkrfSINrJorOvh4nE",
+    authDomain: "ecosort-85cd5.firebaseapp.com",
+    projectId: "ecosort-85cd5",
+    storageBucket: "ecosort-85cd5.firebasestorage.app",
+    messagingSenderId: "532698568856",
+    appId: "1:532698568856:web:00fe22e2d54deb6ea618ed",
+    measurementId: "G-DWR81L0CVG"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const emailField = document.getElementById('email');
+  const passwordField = document.getElementById('password');
+
+  // SIGN UP LOGIC (Creates a new account)
+  document.getElementById('signUpBtn').addEventListener('click', () => {
+    const email = emailField.value;
+    const password = passwordField.value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        alert("Account created! Welcome to Trash Sort.");
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        alert("Sign Up Error: " + error.message);
+      });
+  });
+
+  // LOGIN LOGIC (Signs into existing account)
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    const email = emailField.value;
+    const password = passwordField.value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        window.location.href = "index.html";
+      })
+      .catch((error) => {
+        alert("Login Error: " + error.message);
+      });
+  });
+</script>
 
   <script src="script.js"></script>
 </body>
