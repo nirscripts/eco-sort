@@ -20,10 +20,17 @@
   </nav>
 
   <h1>Trash Camera</h1>
-  <video id="camera" autoplay playsinline></video>
-  <button id="scanBtn">Scan</button>
-  <p id="result">Waiting for scan...</p>
 
-  <script src="script.js"></script>
+<button id="startBtn">Start Camera</button>
+<button id="scanBtn">Scan</button>
+
+<video id="camera" autoplay playsinline muted></video>
+<p id="result"></p>
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+<script src="script.js"></script>
+
+
 </body>
 </html>
