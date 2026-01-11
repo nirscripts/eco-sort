@@ -9,6 +9,16 @@ let model = null; // Placeholder for the model
 const OBJECT_CLASSES = ["waste", "recyclables", "compost", "nontrash"];
 const BIN_CLASSES = ["wastebins", "recyclebins", "compostbins"];
 
+const POINT_RULES = {
+  waste: { bin: "wastebins", points: 3 },
+  recyclables: { bin: "recyclebins", points: 5 },
+  compost: { bin: "compostbins", points: 5 }
+};
+
+let totalPoints = 0;
+let scanHistory = []; // temp storage for later stats page
+
+
 let scanStage = "object"; // "object" → "bin"
 let scannedObject = null;
 let scannedBin = null;
@@ -114,14 +124,36 @@ if (scanStage === "bin") {
 
   scannedBin = bestClass;
 
-  result.innerText =
-    `Bin detected: ${bestClass}. Ready to evaluate.`;
+  const rule = POINT_RULES[scannedObject];
 
-  console.log("Object:", scannedObject);
-  console.log("Bin:", scannedBin);
+if (rule && rule.bin === scannedBin) {
+  totalPoints += rule.points;
 
-  // TEMP: reset for now
-  resetScanFlow("Scan complete. (Evaluation coming next)");
+  const record = {
+    object: scannedObject,
+    bin: scannedBin,
+    points: rule.points,
+    date: getToday()
+  };
+
+  scanHistory.push(record);
+
+  if (window.saveScanToFirestore) {
+    window.saveScanToFirestore(record);
+  }
+
+  console.log("Scan saved:", record);
+
+  resetScanFlow(
+    `Correct! +${rule.points} points  
+Total points: ${totalPoints}`
+  );
+} else {
+  resetScanFlow(
+    `Incorrect bin for ${scannedObject}. No points awarded.`
+  );
+}
+
 }
 
 }
@@ -143,6 +175,11 @@ function resetScanFlow(message) {
   scannedBin = null;
   result.innerText = message;
 }
+
+function getToday() {
+  return new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+}
+
 
 
 // Highlight the current page in navbar

@@ -29,6 +29,65 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+  import { 
+    getFirestore, 
+    doc, 
+    setDoc, 
+    addDoc, 
+    collection, 
+    increment, 
+    serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDGwR3VgjV1yHO3eEDkrfSINrJorOvh4nE",
+    authDomain: "ecosort-85cd5.firebaseapp.com",
+    projectId: "ecosort-85cd5",
+    storageBucket: "ecosort-85cd5.firebasestorage.app",
+    messagingSenderId: "532698568856",
+    appId: "1:532698568856:web:00fe22e2d54deb6ea618ed"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let currentUser = null;
+
+  onAuthStateChanged(auth, user => {
+    currentUser = user;
+  });
+
+  // 👇 Expose function globally
+  window.saveScanToFirestore = async function(record) {
+    if (!currentUser) return;
+
+    // Save individual scan
+    await addDoc(collection(db, "scans"), {
+      uid: currentUser.uid,
+      ...record,
+      timestamp: serverTimestamp()
+    });
+
+    // Update user totals
+    const userRef = doc(db, "users", currentUser.uid);
+    await setDoc(
+      userRef,
+      {
+        totalPoints: increment(record.points),
+        totalScans: increment(1),
+        correctScans: increment(1)
+      },
+      { merge: true }
+    );
+  };
+</script>
+
+
 <script src="script.js"></script>
 
 
